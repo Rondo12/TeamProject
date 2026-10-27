@@ -7,10 +7,11 @@ CompSci Team Term Project: theoretical vs. actual performance of sorting algorit
 
 ## Build and run
 ```
-g++ -O2 -static -o sortbench main.cpp sorts.cpp
+g++ -O2 -static -Wl,--stack,268435456 -o sortbench main.cpp sorts.cpp
 ./sortbench
 ```
 `-static` avoids loading a mismatched libstdc++ DLL on Windows (crashes at startup).
+`--stack` sets a 256 MB stack. Quicksort recursion is n deep on `equal` input.
 
 ## Setup
 - Inputs: values in [0, n-1].
@@ -23,7 +24,7 @@ g++ -O2 -static -o sortbench main.cpp sorts.cpp
 - Sizes: O(n^2) sorts (insertion, selection, bubble) 1000..32000; others 1000..1024000. Doubling.
 - 5 reps per test. Time with `chrono::steady_clock`, in ms.
 - Each output is checked for sortedness.
-- Quicksort: median of three pivot, Hoare partition.
+- Quicksort: median of three pivot, CLRS partition. O(n^2) on `equal`, so only small sizes there.
 - Bubble sort stops early after a pass with no swaps.
 - Radix sort: LSD, base 10.
 

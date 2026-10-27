@@ -124,7 +124,9 @@ int main()
 
                 for (int k = 0; k < NUM_ALGORITHMS; k++) {
                     Algorithm alg = ALGORITHMS[k];
-                    if (alg.slow && !slowSize)
+                    // quicksort is O(n^2) on equal input
+                    bool slow = alg.slow || (alg.name == "quick" && type == "equal");
+                    if (slow && !slowSize)
                         continue;
 
                     vector<int> a = input;

@@ -11,6 +11,13 @@ static bool lessThan(int x, int y)
     return x < y;
 }
 
+// counted comparison x <= y
+static bool lessOrEqual(int x, int y)
+{
+    comparisons++;
+    return x <= y;
+}
+
 static void swapValues(int& x, int& y)
 {
     int t = x;
@@ -108,9 +115,9 @@ void mergeSort(vector<int>& a)
 
 // quicksort
 // median of three pivot
-// hoare partition
+// CLRS partition
 
-// orders a[lo] a[mid] a[hi] then moves median to a[lo]
+// orders a[lo] a[mid] a[hi] then moves median to a[hi]
 static void medianOfThree(vector<int>& a, int lo, int hi)
 {
     int mid = (lo + hi) / 2;
@@ -120,35 +127,32 @@ static void medianOfThree(vector<int>& a, int lo, int hi)
         swapValues(a[hi], a[lo]);
     if (lessThan(a[hi], a[mid]))
         swapValues(a[hi], a[mid]);
-    swapValues(a[lo], a[mid]);
+    swapValues(a[mid], a[hi]);
 }
 
+// returns final pivot index
 static int partition(vector<int>& a, int lo, int hi)
 {
     medianOfThree(a, lo, hi);
-    int pivot = a[lo];
+    int pivot = a[hi];
     int i = lo - 1;
-    int j = hi + 1;
-    while (true) {
-        do {
-            j--;
-        } while (lessThan(pivot, a[j]));
-        do {
+    for (int j = lo; j < hi; j++) {
+        if (lessOrEqual(a[j], pivot)) {
             i++;
-        } while (lessThan(a[i], pivot));
-        if (i >= j)
-            return j;
-        swapValues(a[i], a[j]);
+            swapValues(a[i], a[j]);
+        }
     }
+    swapValues(a[i + 1], a[hi]);
+    return i + 1;
 }
 
 static void quickSortRange(vector<int>& a, int lo, int hi)
 {
     if (lo >= hi)
         return;
-    int p = partition(a, lo, hi);
-    quickSortRange(a, lo, p);
-    quickSortRange(a, p + 1, hi);
+    int q = partition(a, lo, hi);
+    quickSortRange(a, lo, q - 1);
+    quickSortRange(a, q + 1, hi);
 }
 
 void quickSort(vector<int>& a)
