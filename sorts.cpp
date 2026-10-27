@@ -1,11 +1,10 @@
 #include "sorts.h"
-#include <cstdlib>
 
 using namespace std;
 
 long long comparisons = 0;
 
-// Counted comparison: x < y
+// counted comparison x < y
 static bool lessThan(int x, int y)
 {
     comparisons++;
@@ -19,7 +18,7 @@ static void swapValues(int& x, int& y)
     y = t;
 }
 
-// ---------- Insertion sort ----------
+// insertion sort
 
 void insertionSort(vector<int>& a)
 {
@@ -35,7 +34,7 @@ void insertionSort(vector<int>& a)
     }
 }
 
-// ---------- Selection sort ----------
+// selection sort
 
 void selectionSort(vector<int>& a)
 {
@@ -51,8 +50,8 @@ void selectionSort(vector<int>& a)
     }
 }
 
-// ---------- Bubble sort ----------
-// Stops early if a pass makes no swaps.
+// bubble sort
+// stops early if a pass makes no swaps
 
 void bubbleSort(vector<int>& a)
 {
@@ -70,7 +69,7 @@ void bubbleSort(vector<int>& a)
     }
 }
 
-// ---------- Merge sort ----------
+// merge sort
 
 static void merge(vector<int>& a, vector<int>& temp, int lo, int mid, int hi)
 {
@@ -107,20 +106,26 @@ void mergeSort(vector<int>& a)
     mergeSortRange(a, temp, 0, (int)a.size() - 1);
 }
 
-// ---------- Quicksort ----------
-// Random pivot + Hoare partition. Random pivot avoids bad cases on
-// sorted/reversed input; Hoare handles many duplicates well.
+// quicksort
+// median of three pivot
+// hoare partition
 
-// Random int in [lo, hi]. rand() alone is too small on Windows (max 32767).
-static int randomInRange(int lo, int hi)
+// orders a[lo] a[mid] a[hi] then moves median to a[lo]
+static void medianOfThree(vector<int>& a, int lo, int hi)
 {
-    long long r = (long long)rand() * (RAND_MAX + 1LL) + rand();
-    return lo + (int)(r % (hi - lo + 1));
+    int mid = (lo + hi) / 2;
+    if (lessThan(a[mid], a[lo]))
+        swapValues(a[mid], a[lo]);
+    if (lessThan(a[hi], a[lo]))
+        swapValues(a[hi], a[lo]);
+    if (lessThan(a[hi], a[mid]))
+        swapValues(a[hi], a[mid]);
+    swapValues(a[lo], a[mid]);
 }
 
 static int partition(vector<int>& a, int lo, int hi)
 {
-    swapValues(a[lo], a[randomInRange(lo, hi)]);
+    medianOfThree(a, lo, hi);
     int pivot = a[lo];
     int i = lo - 1;
     int j = hi + 1;
@@ -151,9 +156,9 @@ void quickSort(vector<int>& a)
     quickSortRange(a, 0, (int)a.size() - 1);
 }
 
-// ---------- Heapsort ----------
+// heapsort
 
-// Max-heap sift down of a[i] within a[0..size-1].
+// max heap sift down of a[i] within a[0..size-1]
 static void siftDown(vector<int>& a, int i, int size)
 {
     while (true) {
@@ -182,8 +187,9 @@ void heapSort(vector<int>& a)
     }
 }
 
-// ---------- Counting sort ----------
-// Values assumed in [0, max]. Stable.
+// counting sort
+// values assumed in [0, max]
+// stable
 
 void countingSort(vector<int>& a)
 {
@@ -209,8 +215,9 @@ void countingSort(vector<int>& a)
     a = output;
 }
 
-// ---------- Radix sort ----------
-// LSD, base 10. Stable counting sort on each digit.
+// radix sort
+// lsd base 10
+// stable counting sort on each digit
 
 static void countingSortByDigit(vector<int>& a, int place)
 {

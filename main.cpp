@@ -1,4 +1,5 @@
-// Benchmark driver. Writes one row per run to results.csv.
+// benchmark driver
+// writes one row per run to results.csv
 
 #include <iostream>
 #include <fstream>
@@ -12,7 +13,7 @@ using namespace std;
 
 const int REPS = 5;
 
-// Sizes for O(n^2) sorts and for the faster sorts.
+// sizes for O(n^2) sorts and faster sorts
 const int SLOW_SIZES[] = {1000, 2000, 4000, 8000, 16000, 32000};
 const int FAST_SIZES[] = {1000, 2000, 4000, 8000, 16000, 32000, 64000,
                           128000, 256000, 512000, 1024000};
@@ -25,7 +26,7 @@ const int NUM_INPUT_TYPES = 5;
 struct Algorithm {
     string name;
     void (*sort)(vector<int>&);
-    bool slow; // O(n^2): use small sizes only
+    bool slow; // O(n^2) so small sizes only
 };
 
 const Algorithm ALGORITHMS[] = {
@@ -40,7 +41,8 @@ const Algorithm ALGORITHMS[] = {
 };
 const int NUM_ALGORITHMS = 8;
 
-// ---------- Input generation (values in [0, n-1]) ----------
+// input generation
+// values in [0, n-1]
 
 int randomInRange(int lo, int hi)
 {
@@ -48,8 +50,9 @@ int randomInRange(int lo, int hi)
     return lo + (int)(r % (hi - lo + 1));
 }
 
-// Rearranges sorted a so merge sort makes the most comparisons:
-// left half gets even positions, right half odd positions, recursively.
+// rearranges sorted a to force max merge sort comparisons
+// left half gets even positions
+// right half gets odd positions
 void makeMergeWorst(vector<int>& a)
 {
     int n = a.size();
@@ -62,8 +65,8 @@ void makeMergeWorst(vector<int>& a)
         else
             right.push_back(a[i]);
     }
-    // Merge sort splits at (n-1)/2, so left half has (n+1)/2 elements,
-    // which matches the count of even positions.
+    // merge sort left half has (n+1)/2 elements
+    // same as number of even positions
     makeMergeWorst(left);
     makeMergeWorst(right);
     for (int i = 0; i < (int)left.size(); i++)
@@ -103,8 +106,6 @@ bool isSorted(vector<int>& a)
     return true;
 }
 
-// ---------- Main ----------
-
 int main()
 {
     ofstream out("results.csv");
@@ -117,7 +118,7 @@ int main()
             bool slowSize = n <= SLOW_SIZES[NUM_SLOW_SIZES - 1];
 
             for (int rep = 0; rep < REPS; rep++) {
-                // Same seed -> same input for every algorithm.
+                // same seed gives same input for every algorithm
                 srand(t * 1000003 + n * 31 + rep);
                 vector<int> input = makeInput(type, n);
 

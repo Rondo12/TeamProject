@@ -4,7 +4,8 @@
 #include <vector>
 using namespace std;
 
-// Key comparisons made by the comparison-based sorts. Reset before each run.
+// key comparisons made by comparison sorts
+// reset before each run
 extern long long comparisons;
 
 void insertionSort(vector<int>& a);

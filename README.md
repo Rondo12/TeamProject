@@ -23,7 +23,7 @@ g++ -O2 -static -o sortbench main.cpp sorts.cpp
 - Sizes: O(n^2) sorts (insertion, selection, bubble) 1000..32000; others 1000..1024000. Doubling.
 - 5 reps per test. Time with `chrono::steady_clock`, in ms.
 - Each output is checked for sortedness.
-- Quicksort: random pivot, Hoare partition.
+- Quicksort: median of three pivot, Hoare partition.
 - Bubble sort stops early after a pass with no swaps.
 - Radix sort: LSD, base 10.
 
